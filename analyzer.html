@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MacroDetect Analyzer</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0a0f;--c1:#111118;--c2:#181822;--bd:#2a2a3a;--ac:#6c5ce7;--ac2:#a29bfe;--g:#00b894;--y:#fdcb6e;--r:#e17055;--tx:#e8e8f0;--tx2:#8888a0;--m:'Segoe UI Variable',monospace,Consolas}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.55;scrollbar-width:none}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:0}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.ct{max-width:960px;margin:0 auto;padding:40px 24px}
+h1{text-align:center;font-size:34px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+h1+p{text-align:center;color:var(--tx2);font-size:14px;margin-bottom:40px}
+.df{border:2px dashed var(--bd);border-radius:16px;padding:48px;text-align:center;cursor:pointer;background:var(--c1);margin-bottom:32px;transition:border-color .2s,box-shadow .2s}
+.df:hover,.df.ov{border-color:var(--ac);box-shadow:0 0 0 4px rgba(108,92,231,.1)}
+.df h3{font-size:16px;font-weight:600;margin-bottom:4px}.df span{color:var(--tx2);font-size:13px}.df input{display:none}.df.dn{border-color:var(--g);border-style:solid}
+.gd{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ci{background:var(--c2);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.ci label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.ci input{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-family:var(--m);font-size:15px;outline:0;transition:border-color .2s}
+.ci input:focus{border-color:var(--ac)}
+.ba{display:block;margin:24px auto 0;padding:12px 40px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--ac),#7c6cf0);border:none;border-radius:12px;cursor:pointer;transition:opacity .2s}
+.ba:hover{opacity:.9}
+.q{background:var(--c1);border:1px solid var(--bd);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.qh{display:flex;align-items:center;padding:16px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.qh:hover{background:rgba(255,255,255,.02)}
+.cv{width:16px;height:16px;fill:none;stroke:var(--tx2);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;margin-right:10px;transition:transform .2s;flex-shrink:0}
+.q.op .cv{transform:rotate(90deg)}
+.qt{font-size:15px;font-weight:600}.qt .tg{display:inline-block;background:var(--ac);color:#fff;font-size:11px;padding:1px 7px;border-radius:5px;margin-left:8px;font-weight:700;vertical-align:middle}
+.qb{display:none;padding:0 20px 16px}.q.op .qb{display:block}
+.sr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)}.sr:last-child{border-bottom:none}
+.sl{font-size:14px;font-weight:500}.sv{font-family:var(--m);font-size:14px;font-weight:600;color:var(--ac2)}
+.dr{background:var(--c2);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.sn{color:var(--tx);font-weight:600;font-family:var(--m)}.tot{color:var(--g);font-weight:600;font-family:var(--m)}
+.fr{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.sf{background:var(--bg);border:1px solid var(--bd);padding:2px 7px;border-radius:5px;font-family:var(--m);font-size:12px}
+.sf.cl{color:var(--tx2)}.sf.it{color:var(--tx)}
+.ar{color:var(--ac);font-size:11px}
+.tb{width:100%;border-collapse:collapse;font-size:13px}
+.tb th{text-align:left;color:var(--tx2);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1px solid var(--bd)}
+.tb td{padding:6px 10px;border-bottom:1px solid var(--bd)}
+.mn{font-family:var(--m);font-size:12px;color:var(--ac2)}
+.ni{color:var(--tx2);font-size:14px;text-align:center;padding:16px}
+.hd{margin-top:12px;text-align:center;font-size:12px;color:var(--tx2)}
+</style>
+</head>
+<body>
+<div class="ct">
+<h1>MacroDetect</h1><p>Input timing analyzer for Minecraft</p>
+<div class="df" id="dz"><h3>Drop inputlog_*.csv here</h3><span>or click to browse</span><input type="file" id="fi" accept=".csv"></div>
+<div style="background:var(--c1);border:1px solid var(--bd);border-radius:14px;padding:24px;margin-bottom:32px">
+<div style="font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:var(--ac);display:inline-block"></span>Keybinds</div>
+<div class="gd">
+<div class="ci"><label>Obsidian</label><input id="k0" placeholder="e.g. 1"></div>
+<div class="ci"><label>End Crystal</label><input id="k1" placeholder="e.g. 2"></div>
+<div class="ci"><label>Respawn Anchor</label><input id="k2" placeholder="e.g. 3"></div>
+<div class="ci"><label>Glowstone</label><input id="k3" placeholder="e.g. 4"></div>
+<div class="ci"><label>Totem of Undying</label><input id="k4" placeholder="e.g. 5"></div>
+<div class="ci"><label>Enderpearl</label><input id="k5" placeholder="e.g. 6"></div>
+</div>
+<p class="hd">Mouse: lclick, rclick, x1click, x2click &mdash; Keyboard: 1-9, a, f1-f12, etc.</p>
+<button class="ba" id="ba">Analyze</button>
+</div>
+<div id="res" style="display:none">
+<div class="q op"><div class="qh" onclick="tog(this.parentElement)"><svg class="cv" viewBox="0 0 24 24"><polyline points="9 5 17 12 9 19"/></svg><span class="qt">Average Timings <span class="tg" id="tc"></span></span></div><div class="qb" id="cv"></div></div>
+<div class="q"><div class="qh" onclick="tog(this.parentElement)"><svg class="cv" viewBox="0 0 24 24"><polyline points="9 5 17 12 9 19"/></svg><span class="qt">Obsidian → Crystal <span class="tg" id="t1"></span></span></div><div class="qb" id="c1"></div></div>
+<div class="q"><div class="qh" onclick="tog(this.parentElement)"><svg class="cv" viewBox="0 0 24 24"><polyline points="9 5 17 12 9 19"/></svg><span class="qt">Anchor → Glowstone → Totem <span class="tg" id="t2"></span></span></div><div class="qb" id="c2"></div></div>
+<div class="q"><div class="qh" onclick="tog(this.parentElement)"><svg class="cv" viewBox="0 0 24 24"><polyline points="9 5 17 12 9 19"/></svg><span class="qt">Airplace (AGT × 2 → Totem) <span class="tg" id="t3"></span></span></div><div class="qb" id="c3"><div class="ni">No airplace sequences found.</div></div></div>
+<div class="q"><div class="qh" onclick="tog(this.parentElement)"><svg class="cv" viewBox="0 0 24 24"><polyline points="9 5 17 12 9 19"/></svg><span class="qt">All Tracked Inputs <span class="tg" id="ta"></span></span></div><div class="qb"><table class="tb"><thead><tr><th>#</th><th>Item</th><th>Key</th><th>Delta</th></tr></thead><tbody id="tbody"></tbody></table></div></div>
+</div></div>
+<script>
+var raw=[],mp={};
+var CZ=['lclick','rclick','x1click','x2click'];
+var T=[];
+
+var dz=document.getElementById('dz'),fi=document.getElementById('fi');
+fi.onchange=function(e){if(e.target.files[0])doLoad(e.target.files[0])};
+dz.onclick=function(){fi.click()};
+dz.ondragover=function(e){e.preventDefault();dz.classList.add('ov')};
+dz.ondragleave=function(){dz.classList.remove('ov')};
+dz.ondrop=function(e){e.preventDefault();dz.classList.remove('ov');if(e.dataTransfer.files[0])doLoad(e.dataTransfer.files[0])};
+
+function doLoad(f){
+  if(!f.name.endsWith('.csv'))return;
+  var rdr=new FileReader();
+  rdr.onload=function(e){
+    parseCSV(e.target.result);
+    dz.querySelector('h3').textContent=f.name+' loaded';
+    dz.classList.add('dn');
+  };
+  rdr.readAsText(f);
+}
+
+function parseCSV(t){
+  raw=[];
+  var lines=t.trim().split('\n');
+  for(var i=1;i<lines.length;i++){
+    var p=lines[i].split(','); if(p.length<4)continue;
+    var d=parseFloat(p[3].trim());
+    raw.push({idx:i,type:p[1].trim().toLowerCase(),key:p[2].trim().toLowerCase(),deltaUs:isNaN(d)?null:d,hit:p[5]?p[5].trim():""});
+  }
+}
+
+function fmt(us){if(us==null)return'?';if(us<1000)return Math.round(us)+'us';return Math.round(us/1000)+'ms'}
+function cap(s){return s.charAt(0).toUpperCase()+s.substr(1)}
+function gid(id){return document.getElementById(id)}
+function kv(id){return gid(id).value.trim().toLowerCase()}
+function isClk(k){return CZ.indexOf(k)>=0}
+function clkLbl(k){if(k==='lclick')return'LClick';if(k==='rclick')return'RClick';if(k==='x1click')return'X1Click';if(k==='x2click')return'X2Click';return cap(k)}
+function mk(k){for(var t in mp){if(mp[t]===k)return t}return null}
+
+gid('ba').onclick=function(){
+  mp={obsidian:kv('k0'),crystal:kv('k1'),anchor:kv('k2'),glowstone:kv('k3'),totem:kv('k4'),pearl:kv('k5')};
+
+  /* absolute timestamps */
+  var abs=[];
+  var cum=0;
+  for(var i=0;i<raw.length;i++){
+    abs[i]=cum;
+    if(raw[i].deltaUs!=null)cum+=raw[i].deltaUs;
+  }
+
+  /* tracked-only */
+  T=[];
+  for(var i=0;i<raw.length;i++){
+    var e=raw[i];
+    var item=mk(e.key);
+    var isC=e.type==='mouse'&&isClk(e.key);
+    if(isC||item){
+      T.push({absTs:abs[i],delta:null,item:item,key:e.key,type:isC?'click':'item',hit:e.hit});
+    }
+  }
+
+  /* recomputed deltas between consecutive tracked events */
+  for(var i=1;i<T.length;i++){
+    T[i].delta=T[i].absTs-T[i-1].absTs;
+  }
+
+  /* helpers */
+  function fi(st,nm){for(var j=st;j<T.length;j++){if(T[j].item===nm)return j}return -1}
+  function fc(st){for(var j=st;j<T.length;j++){if(T[j].type==='click')return j}return -1}
+
+  /* obsidian+click+crystal+click */
+  var oC=[];
+  for(var i=0;i<T.length;i++){
+    if(T[i].item!=='obsidian')continue;
+    var c=fc(i+1);if(c<0){i=i+1;continue}
+    var cr=fi(c+1,'crystal');if(cr<0){i=c;continue}
+    var c2=fc(cr+1);if(c2<0){i=cr;continue}
+    var d=[T[c].delta||0,T[cr].delta||0,T[c2].delta||0];
+    oC.push({s:[T[i],T[c],T[cr],T[c2]],d:d,tot:d[0]+d[1]+d[2]});i=c2;
+  }
+
+  /* anchor+click+glowstone+click+totem+click */
+  var aG=[];
+  for(var i=0;i<T.length;i++){
+    if(T[i].item!=='anchor')continue;
+    var c=fc(i+1);if(c<0){i=i+1;continue}
+    var gw=fi(c+1,'glowstone');if(gw<0){i=c;continue}
+    var c2=fc(gw+1);if(c2<0){i=gw;continue}
+    var tt=fi(c2+1,'totem');if(tt<0){i=c2;continue}
+    var c3=fc(tt+1);if(c3<0){i=tt;continue}
+    var d=[T[c].delta||0,T[gw].delta||0,T[c2].delta||0,T[tt].delta||0,T[c3].delta||0];
+    aG.push({s:[T[i],T[c],T[gw],T[c2],T[tt],T[c3]],d:d,tot:d[0]+d[1]+d[2]+d[3]+d[4]});i=c3;
+  }
+
+  /* airplace: A→clk→G→clk→A→clk→clk→G→clk→T→clk */
+  var aP=[];
+  for(var i=0;i<T.length;i++){
+    if(T[i].item!=='anchor')continue;
+    var c1=fc(i+1);if(c1<0)continue;
+    var g1=fi(c1+1,'glowstone');if(g1<0)continue;
+    var c2=fc(g1+1);if(c2<0)continue;
+    var a2=fi(c2+1,'anchor');if(a2<0)continue;
+    var c3=fc(a2+1);if(c3<0)continue;
+    var c4=fc(c3+1);if(c4<0)continue;
+    var g2=fi(c4+1,'glowstone');if(g2<0)continue;
+    var c5=fc(g2+1);if(c5<0)continue;
+    var tt=fi(c5+1,'totem');if(tt<0)continue;
+    var c6=fc(tt+1);if(c6<0)continue;
+    var d=[T[c1].delta||0,T[g1].delta||0,T[c2].delta||0,T[a2].delta||0,T[c3].delta||0,T[c4].delta||0,T[g2].delta||0,T[c5].delta||0,T[tt].delta||0,T[c6].delta||0];
+    aP.push({s:[T[i],T[c1],T[g1],T[c2],T[a2],T[c3],T[c4],T[g2],T[c5],T[tt],T[c6]],d:d,tot:d[0]+d[1]+d[2]+d[3]+d[4]+d[5]+d[6]+d[7]+d[8]+d[9]});i=c6;
+  }
+
+  renderAvg(oC,aG,aP,T);
+  renderDet('c1',oC);
+  renderDet('c2',aG);
+  renderDet('c3',aP);
+  renderAll(T);
+  gid('res').style.display='block';
+  gid('res').scrollIntoView({behavior:'smooth'});
+};
+
+function renderAvg(oC,aG,aP,tr){
+  var h='';
+  h+=mkR('Obsidian → Crystal',cAvg(oC));
+  h+=mkR('Anchor → Glowstone → Totem',cAvg(aG));
+  if(aP.length)h+=mkR('Airplace (AGT × 2 → Totem)',cAvg(aP));
+  else h+='<div class="sr"><span class="sl">Airplace (avg)</span><span class="sv" style="color:var(--tx2)">Not found</span></div>';
+  gid('cv').innerHTML=h;
+  var z='('+oC.length+' OC, '+aG.length+' AG'+(aP.length?', '+aP.length+' AP':'')+')';
+  gid('tc').textContent=z;gid('t1').textContent=oC.length;gid('t2').textContent=aG.length;gid('t3').textContent=aP.length;gid('ta').textContent=tr.length;
+}
+
+function cAvg(ss){
+  if(!ss.length)return null;
+  var cm=[];for(var i=0;i<ss.length;i++){if(ss[i].tot<=500000)cm.push(ss[i])}
+  if(!cm.length)return null;
+  var n=cm.length,ts=0;
+  for(var i=0;i<n;i++)ts+=cm[i].tot;ts/=n;
+  var nd=cm[0].d.length,ad=[];
+  for(var j=0;j<nd;j++){
+    var vs=[],sm=0,cn=0;
+    for(var k=0;k<n;k++){if(cm[k].d[j]!=null&&cm[k].d[j]<=500000){sm+=cm[k].d[j];cn++}}
+    ad.push(cn>0?sm/cn:null);
+  }
+  return{n:n,tot:ts,d:ad};
+}
+
+function mkR(l,a){
+  if(!a)return'<div class="sr"><span class="sl">'+l+' (avg)</span><span class="sv">N/A</span></div>';
+  var p='';for(var i=0;i<a.d.length;i++){if(i)p+=' → ';p+=fmt(a.d[i])}
+  return'<div class="sr"><span class="sl">'+l+' (avg)</span><span class="sv">'+fmt(a.tot)+' '+p+'</span></div>';
+}
+
+function renderDet(id,ss){
+  var el=gid(id);
+  if(!ss.length){el.innerHTML='<div class="ni">No sequences found.</div>';return}
+  var h='';
+  for(var i=0;i<ss.length;i++){
+    var sq=ss[i];
+    h+='<div class="dr"><div class="dh"><span class="sn">#'+(i+1)+'</span><span class="tot">'+fmt(sq.tot)+'</span></div><div class="fr">';
+    for(var j=0;j<sq.s.length;j++){
+      var s=sq.s[j],c='it',lbl;
+      if(s.item){lbl=cap(s.item);c='it'}
+      else if(s.type==='click'){lbl=clkLbl(s.key);c='cl'}
+      else{lbl=cap(s.key);c='it'}
+      h+='<span class="sf '+c+'">'+lbl+'</span>';
+      if(j<sq.d.length){h+='<span class="ar">→</span>';h+='<span class="sf" style="color:var(--gr)">'+fmt(sq.d[j])+'</span>'}
+    }
+    h+='</div></div>';
+  }
+  el.innerHTML=h;
+}
+
+function renderAll(tr){
+  var h='',n=0;
+  for(var i=0;i<tr.length;i++){
+    n++;
+    if(tr[i].type==='click'){
+      h+='<tr><td>'+n+'</td><td></td><td>'+clkLbl(tr[i].key)+'</td><td class="mn">'+fmt(tr[i].delta)+'</td></tr>';
+    }else{
+      h+='<tr><td>'+n+'</td><td>'+cap(tr[i].item)+'</td><td>'+tr[i].key+'</td><td class="mn">'+fmt(tr[i].delta)+'</td></tr>';
+    }
+  }
+  gid('tbody').innerHTML=h;
+}
+
+function tog(el){el.classList.toggle('op')}
+</script>
+</body>
+</html>
